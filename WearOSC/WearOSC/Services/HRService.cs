@@ -123,8 +123,7 @@ namespace WearOSC.Services
         {
             var stopIntent = new Intent(stop_it);
           
-            var pendingIntentStopAction = PendingIntent.GetBroadcast(this, SERVICE_RUNNING_NOTIFICATION_ID, stopIntent, PendingIntentFlags.UpdateCurrent);
-            SendBroadcast(stopIntent);
+           SendBroadcast(stopIntent);
             
             var intent = new Intent(Android.App.Application.Context, typeof(HRService));
             Android.App.Application.Context.StopService(intent);
@@ -152,10 +151,13 @@ namespace WearOSC.Services
 
         void ISensorEventListener.OnSensorChanged(SensorEvent e)
         {
-          //  Console.WriteLine(e.Values.ToString());
+            var hrIntent = new Intent(MainActivity.hr_intent);
+            hrIntent.PutExtra("HR", e?.Values?[0].ToString());
+            SendBroadcast(hrIntent);
             OSCMainService.HeartBeat((Int32)e?.Values?[0]);
         }
     }
+    [BroadcastReceiver(Enabled = true, Exported = false)]
     public class BReceiver : BroadcastReceiver
     {
         public override void OnReceive(Context context, Intent intent)

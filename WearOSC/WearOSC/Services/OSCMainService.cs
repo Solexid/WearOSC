@@ -15,7 +15,7 @@ namespace WearOSC.Services
 {
     public class OSCMainService
     {
-      
+
         public static OSCService osc = new OSCService();
 
         public OSCMainService()
@@ -31,24 +31,27 @@ namespace WearOSC.Services
         }
 
 
-     
 
-       public async  static void HeartBeat(int _beat)
+
+        public async static void HeartBeat(int _beat)
         {
-           
-        
-             
-                   if(_beat!=0)
-                    await osc.SendFloatAsync("/avatar/parameters/HeartBeat", ClampAndNormalize(0,255,_beat));
 
 
 
+            if (_beat != 0)
+            {
+                await osc.SendFloatAsync("/avatar/parameters/HeartBeat", ClampAndNormalize(0, 255, _beat));
+
+                // await osc.SendFloatAsync("/avatar/parameters/HeartRate", ClampAndNormalize(0, 255, _beat)); //Vard style names
+                await osc.SendFloatAsync("/avatar/parameters/Heartrate2", ClampAndNormalize(0, 255, _beat));
+                await osc.SendIntAsync("/avatar/parameters/Heartrate3", _beat);
+            }
 
         }
 
 
-   
-       static float ClampAndNormalize(int min, int max, float value)
+
+        static float ClampAndNormalize(int min, int max, float value)
         {
 
             var newres = value - min;
@@ -58,7 +61,7 @@ namespace WearOSC.Services
             return result;
 
         }
- 
+
 
     }
 }
